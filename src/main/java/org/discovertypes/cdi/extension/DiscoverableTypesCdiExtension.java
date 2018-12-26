@@ -63,7 +63,7 @@ public class DiscoverableTypesCdiExtension implements Extension {
 		if (discoveredType.isIgnoredBean()) {
 			event.veto();
 		}
-		LOGGER.finer("discovered aggregate: " + event.getAnnotatedType().getJavaClass());
+		LOGGER.finer("discovered: " + event.getAnnotatedType().getJavaClass());
 	}
 
 	void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager beanManager) {
