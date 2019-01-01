@@ -16,7 +16,7 @@ package org.discovertypes.cdi.example.type;
 import org.junit.Ignore;
 
 @Ignore
-@MetaTypeAnnotation
+@OriginalTypeAnnotation
 public class OriginalAnnotatedType {
 
 	private String id;

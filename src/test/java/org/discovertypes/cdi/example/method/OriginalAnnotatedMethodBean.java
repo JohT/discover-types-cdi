@@ -13,12 +13,9 @@
 //limitations under the License.
 package org.discovertypes.cdi.example.method;
 
-import javax.enterprise.context.Dependent;
-
 import org.junit.Ignore;
 
 @Ignore
-@Dependent
 public class OriginalAnnotatedMethodBean {
 
 	@OriginalMethodAnnotation

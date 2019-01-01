@@ -16,6 +16,7 @@ package org.discovertypes.cdi;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -99,9 +100,28 @@ public class DiscoveredTypes implements Iterable<DiscoveredType>, Serializable {
 	 */
 	public Collection<DiscoveredType> annotatedWith(Class<? extends Annotation> annotationType) {
 		if (!this.discoveredTypes.containsKey(annotationType)) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 		return new ArrayList<>(this.discoveredTypes.get(annotationType));
+	}
+
+	/**
+	 * Gets a {@link Collection} of {@link DiscoveredType}s, that are annotated with
+	 * any (at least one) of the given {@link Annotation}-{@link Class}-Types.
+	 * <p>
+	 * Use {@link Arrays#asList(Object...)} to convert semicolon separated
+	 * annotation types or an array of annotation types as parameter.
+	 * 
+	 * @param annotationTypes - {@link Iterable} (e.g. a {@link List}) of
+	 *                        {@link Annotation}s.
+	 * @return {@link Collection} of {@link DiscoveredType}s.
+	 */
+	public Collection<DiscoveredType> annotatedWithAnyOf(Iterable<Class<? extends Annotation>> annotationTypes) {
+		Set<DiscoveredType> discoveredTypes = new HashSet<>();
+		for (Class<? extends Annotation> annotationType : annotationTypes) {
+			discoveredTypes.addAll(annotatedWith(annotationType));
+		}
+		return discoveredTypes;
 	}
 
 	private Collection<DiscoveredType> getDiscoveredTypes() {

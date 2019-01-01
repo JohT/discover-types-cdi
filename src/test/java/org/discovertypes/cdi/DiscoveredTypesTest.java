@@ -43,7 +43,8 @@ public class DiscoveredTypesTest {
 	private DiscoveredType integerWithDeprecated = DiscoveredType.of(Integer.class)
 			.withAdditionalAnnotation(DEPRECATED.build());
 	private DiscoveredType longWithIgnoreAndNamed = DiscoveredType.of(Long.class)
-			.withAdditionalAnnotation(IGNORE.build()).withAdditionalAnnotation(NAMED.build());
+			.withAdditionalAnnotation(IGNORE.build())
+			.withAdditionalAnnotation(NAMED.build());
 
 	/**
 	 * class under test.
@@ -64,6 +65,24 @@ public class DiscoveredTypesTest {
 		assertThat(byAnnotation, hasItem(stringWithIgnore));
 		assertThat(byAnnotation, hasItem(longWithIgnoreAndNamed));
 		assertEquals(2, byAnnotation.size());
+	}
+
+	@Test
+	public void annotatedWithAnyOfSingleAnnotation() {
+		Collection<DiscoveredType> byAnnotation = discoveredTypes.annotatedWithAnyOf(asList(Ignore.class));
+		assertThat(byAnnotation, hasItem(stringWithIgnore));
+		assertThat(byAnnotation, hasItem(longWithIgnoreAndNamed));
+		assertEquals(2, byAnnotation.size());
+	}
+
+	@Test
+	public void filteredByAnyOfTheGivenAnnotations() {
+		Collection<DiscoveredType> byAnnotation = discoveredTypes
+				.annotatedWithAnyOf(asList(Ignore.class, Deprecated.class));
+		assertThat(byAnnotation, hasItem(stringWithIgnore));
+		assertThat(byAnnotation, hasItem(integerWithDeprecated));
+		assertThat(byAnnotation, hasItem(longWithIgnoreAndNamed));
+		assertEquals(3, byAnnotation.size());
 	}
 
 	@Test

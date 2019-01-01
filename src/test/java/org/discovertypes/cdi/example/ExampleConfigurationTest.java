@@ -14,10 +14,12 @@
 package org.discovertypes.cdi.example;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 import org.discovertypes.cdi.example.configuration.ExampleConfiguration;
 import org.discovertypes.cdi.example.method.MetaAnnotatedMethodBean;
+import org.discovertypes.cdi.example.method.OriginalAnnotatedMethodBean;
 import org.discovertypes.cdi.example.type.MetaAnnotatedType;
 import org.discovertypes.cdi.example.type.OriginalAnnotatedType;
 import org.jboss.weld.environment.se.Weld;
@@ -37,27 +39,33 @@ public class ExampleConfigurationTest {
 		try (WeldContainer container = new Weld().initialize()) {
 			ExampleConfiguration configuration = container.select(ExampleConfiguration.class).get();
 			checkTypeAnnotated(configuration);
+			checkNotDiscoverableOriginalsAreIgnored(configuration);
 			checkMethodAnnotated(configuration);
 		}
 	}
 
 	private void checkTypeAnnotated(ExampleConfiguration configuration) {
-		assertThat(configuration.getOriginalTypeAnnotated(), hasItem(OriginalAnnotatedType.class));
 		assertThat(configuration.getOriginalTypeAnnotated(), hasItem(MetaAnnotatedType.class));
-		assertThat(configuration.getMetaTypeAnnotated(), hasItem(OriginalAnnotatedType.class));
 		assertThat(configuration.getMetaTypeAnnotated(), hasItem(MetaAnnotatedType.class));
 	}
 
 	private void checkMethodAnnotated(ExampleConfiguration configuration) {
-		// Method-Annotations do no mark their type as "discoverable".
-		// Only the meta-annotated and thereby as discoverable marked bean
-		// is discovered. But it is also discovered/registered under the name of the
-		// original annotation.
-		// This is because the CDI extension only discovers "Discoverable" annotated
-		// types. Without filtering/restriction negative performance effects may be
-		// possible. It is always possible to annotate the type containing the methods
-		// though (workaround).
 		assertThat(configuration.getOriginalMethodAnnotated(), hasItem(MetaAnnotatedMethodBean.class));
 		assertThat(configuration.getMetaMethodAnnotated(), hasItem(MetaAnnotatedMethodBean.class));
+	}
+
+	private void checkNotDiscoverableOriginalsAreIgnored(ExampleConfiguration configuration) {
+		// Only meta-annotated and thereby as discoverable marked beans are discovered,
+		// assuming that the original annotation may not be changed
+		// and therefore cannot be marked using "Discoverable".
+		// It is only registered under the name of the original annotation by using a
+		// "Discoverable" meta-annotation.
+		// This is because the CDI extension only discovers "Discoverable" annotated
+		// types. Without filtering/restriction negative performance effects may be
+		// possible.
+		assertThat(configuration.getOriginalTypeAnnotated(), not(hasItem(OriginalAnnotatedType.class)));
+		assertThat(configuration.getMetaTypeAnnotated(), not(hasItem(OriginalAnnotatedType.class)));
+		assertThat(configuration.getOriginalMethodAnnotated(), not(hasItem(OriginalAnnotatedMethodBean.class)));
+		assertThat(configuration.getMetaMethodAnnotated(), not(hasItem(OriginalAnnotatedMethodBean.class)));
 	}
 }

@@ -18,8 +18,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.enterprise.inject.Stereotype;
-
 import org.discovertypes.cdi.Discoverable;
 
 /**
@@ -30,7 +28,7 @@ import org.discovertypes.cdi.Discoverable;
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Stereotype
+//@Stereotype //May be used, but is no necessary
 @OriginalTypeAnnotation
 @Discoverable(ignoreBean = true)
 public @interface MetaTypeAnnotation {
