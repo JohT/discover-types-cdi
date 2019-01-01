@@ -18,8 +18,9 @@ import org.junit.Ignore;
 @Ignore
 public class MetaAnnotatedMethodBean {
 
+	// private Methods with annotations are registered too.
 	@MetaMethodAnnotation
-	public void doSomething(String id) {
+	private void doSomething(String id) {
 		// Implementation empty
 	}
 

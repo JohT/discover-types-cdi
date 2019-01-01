@@ -57,21 +57,21 @@ enum AnnotationCollectors {
 	FIELDS(AnnotationLocation.FIELD) {
 		@Override
 		public void collectAnnotationsOf(Class<?> type, final Collection<DiscoveredAnnotation> annotations) {
-			addAnnotatedElements(type.getFields(), annotations);
+			addAnnotatedElements(type.getDeclaredFields(), annotations);
 
 		}
 	},
 	CONSTRUCTORS(AnnotationLocation.CONSTRUCTOR) {
 		@Override
 		public void collectAnnotationsOf(Class<?> type, final Collection<DiscoveredAnnotation> annotations) {
-			addAnnotatedElements(type.getConstructors(), annotations);
+			addAnnotatedElements(type.getDeclaredConstructors(), annotations);
 
 		}
 	},
 	CONSTRUCTOR_PARAMETERS(AnnotationLocation.CONSTRUCTOR_PARAMETER) {
 		@Override
 		public void collectAnnotationsOf(Class<?> type, final Collection<DiscoveredAnnotation> annotations) {
-			for (Constructor<?> element : type.getConstructors()) {
+			for (Constructor<?> element : type.getDeclaredConstructors()) {
 				addAnnotatedElements(element.getParameters(), annotations);
 			}
 
@@ -80,14 +80,14 @@ enum AnnotationCollectors {
 	METHODS(AnnotationLocation.METHOD) {
 		@Override
 		public void collectAnnotationsOf(Class<?> type, final Collection<DiscoveredAnnotation> annotations) {
-			addAnnotatedElements(type.getMethods(), annotations);
+			addAnnotatedElements(type.getDeclaredMethods(), annotations);
 
 		}
 	},
 	METHOD_PARAMETERS(AnnotationLocation.METHOD_PARAMETER) {
 		@Override
 		public void collectAnnotationsOf(Class<?> type, final Collection<DiscoveredAnnotation> annotations) {
-			for (Method element : type.getMethods()) {
+			for (Method element : type.getDeclaredMethods()) {
 				addAnnotatedElements(element.getParameters(), annotations);
 			}
 
